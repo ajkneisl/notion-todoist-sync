@@ -1,5 +1,6 @@
 package dev.ajkneisl.nts
 
+import dev.ajkneisl.nts.impl.notion.Widget
 import dev.ajkneisl.nts.sync.Sync
 import kotlinx.coroutines.delay
 import org.slf4j.Logger
@@ -28,11 +29,12 @@ object NotionTodoistSync {
                     },
                 "--notion" to { NOTION_API_KEY = it },
                 "--todoist" to { TODOIST_API_KEY = it },
-                "--refresh" to { REFRESH_INTERVAL = it.toLong() }
+                "--refresh" to { REFRESH_INTERVAL = it.toLong() },
+                "--bgcolor" to Widget::handleColorArgument
             )
         )
 
-        Sync.syncTasks(false)
+        Sync.syncTasks(true)
         while (true) {
             delay(100)
         }

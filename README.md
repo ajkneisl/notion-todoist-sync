@@ -23,3 +23,4 @@ Sync your Todoist and your Notion. This works by detecting new tasks then append
 - `--refresh:{time in ms}`: Define the time between each sync. (default is 5 minutes)
 - `--project_specific:{true/false}`: Enable or disable the ability for tasks to be individually sorted through different project blocks.
 - `--tie_project:{project name|block id}`: Define the block for a Todoist project. All new tasks for the project will be appended here.
+- `--bgcolor:{light/dark/hex code}`: Change the background color of the embed.

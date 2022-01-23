@@ -1,6 +1,7 @@
 package dev.ajkneisl.nts.impl.todoist.obj
 
 import dev.ajkneisl.nts.impl.notion.Notion
+import dev.ajkneisl.nts.impl.notion.Widget
 import dev.ajkneisl.nts.impl.todoist.Todoist
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -32,7 +33,7 @@ fun Task.toBlock(): JsonElement {
         put("object", "block")
         put("type", "embed")
         putJsonObject("embed") {
-            put("url", Todoist.getWidgetUrl(this@toBlock.id))
+            put("url", Widget.getWidgetUrl(this@toBlock.id))
         }
     }
 }
