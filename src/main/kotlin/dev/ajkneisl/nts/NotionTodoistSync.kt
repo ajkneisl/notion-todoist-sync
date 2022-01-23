@@ -1,19 +1,18 @@
 package dev.ajkneisl.nts
 
-import dev.ajkneisl.nts.impl.notion.Notion
-import dev.ajkneisl.nts.impl.todoist.Todoist
 import dev.ajkneisl.nts.sync.Sync
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object NotionTodoistSync {
     private val LOGGER: Logger = LoggerFactory.getLogger(this.javaClass)
+
     var NOTION_API_KEY = ""
     var TODOIST_API_KEY = ""
     var BLOCK_ID = ""
-    var DATABASE_ID = ""
+    val BLOCK_TIED_PROJECT = hashMapOf<String, String>()
+    var BLOCK_USE_PROJECT_SPECIFIC = false
     var REFRESH_INTERVAL: Long = 1000 * 60 * 5
 
     suspend fun main(args: Array<String>) {
@@ -21,7 +20,12 @@ object NotionTodoistSync {
             args,
             hashMapOf(
                 "--use_block" to { BLOCK_ID = it },
-                "--use_database" to { DATABASE_ID = it },
+                "--project_specific" to { BLOCK_USE_PROJECT_SPECIFIC = it.toBoolean() },
+                "--tie_project" to
+                    {
+                        val split = it.split("|")
+                        BLOCK_TIED_PROJECT[split[0]] = split[1]
+                    },
                 "--notion" to { NOTION_API_KEY = it },
                 "--todoist" to { TODOIST_API_KEY = it },
                 "--refresh" to { REFRESH_INTERVAL = it.toLong() }

@@ -24,10 +24,26 @@ object Sync {
         val tasks = Todoist.getTasks()
 
         if (!initialSync) {
+            val projects = Todoist.getProjects()
+
             for (task in tasks) {
                 if (!CURRENT_TASK_IDS.contains(task.id)) {
+                    var blockId = NotionTodoistSync.BLOCK_ID
                     LOGGER.info("Found new task! {}", task.id)
-                    Notion.appendBlock(task.toBlock())
+
+                    if (NotionTodoistSync.BLOCK_USE_PROJECT_SPECIFIC) {
+                        val project = projects.find { project -> project.id == task.projectId }
+
+                        if (project != null) {
+                            LOGGER.debug("Project Specific: Looking for project: {}, Block tied projects: {}", project.name, NotionTodoistSync.BLOCK_TIED_PROJECT)
+                            if (NotionTodoistSync.BLOCK_TIED_PROJECT.containsKey(project.name.lowercase())) {
+                                blockId = NotionTodoistSync.BLOCK_TIED_PROJECT[project.name.lowercase()] ?: blockId
+                                LOGGER.info("Task {} using project block ID: {}", task.id, blockId)
+                            }
+                        }
+                    }
+
+                    Notion.appendBlock(task.toBlock(), blockId = blockId)
                 }
             }
         }
